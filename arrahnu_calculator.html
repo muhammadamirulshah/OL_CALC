@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ar Rahnu OL Financing Calculator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+      background: #f4f4f4;
+    }
+    .row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .box {
+      background: #fff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 5px;
+    }
+    .result {
+      margin-top: 20px;
+      background: #e6f7ff;
+      padding: 10px;
+      border-left: 5px solid #1890ff;
+    }
+    .profit-box {
+      margin-top: 20px;
+      padding: 10px;
+      background: #fff3cd;
+      border-left: 5px solid #ffc107;
+    }
+  </style>
+</head>
+<body>
+  <h2>Ar Rahnu OL Financing Calculator</h2>
+  <div class="row">
+    <div class="box">
+      <h2>Pajakan 1</h2>
+      <label>Berat Emas (gram)</label>
+      <input type="number" id="weight1" value="">
+      <label>Harga Semasa (RM/gram)</label>
+      <input type="number" id="price1" value="">
+      <label>Kadar Pembiayaan (%)</label>
+      <input type="number" id="loan1" value="">
+      <label>Kadar Upah Simpan Sebulan (%)</label>
+      <input type="number" id="rate1" value="">
+      <label>Tempoh Gadaian (bulan)</label>
+      <input type="number" id="month1" value="">
+      <div class="result" id="result1"></div>
+    </div>
+
+    <div class="box">
+      <h2>Pajakan 2</h2>
+      <label>Berat Emas (gram)</label>
+      <input type="number" id="weight2" value="">
+      <label>Harga Semasa (RM/gram)</label>
+      <input type="number" id="price2" value="">
+      <label>Kadar Pembiayaan (%)</label>
+      <input type="number" id="loan2" value="">
+      <label>Kadar Upah Simpan Sebulan (%)</label>
+      <input type="number" id="rate2" value="">
+      <label>Tempoh Gadaian (bulan)</label>
+      <input type="number" id="month2" value="">
+      <div class="result" id="result2"></div>
+    </div>
+  </div>
+
+  <div class="profit-box" id="profit"></div>
+
+  <script>
+    function calculate(id) {
+      const weight = parseFloat(document.getElementById('weight' + id).value)|| 0;
+      const price = parseFloat(document.getElementById('price' + id).value)|| 0;
+      const loan = parseFloat(document.getElementById('loan' + id).value)|| 0;
+      const rate = parseFloat(document.getElementById('rate' + id).value)|| 0;
+      const months = parseFloat(document.getElementById('month' + id).value)|| 0;
+
+      const nilaiEmas = weight * price; // c
+      const pembiayaan = nilaiEmas * loan / 100; // f
+      //const usedRate = pembiayaan < 5000 ? 0.6 : 0.8; // g
+      const usedRate = rate;
+      const cajSimpan = nilaiEmas * usedRate / 100 * months; // i
+      const cajSebulan = cajSimpan / months|| 0; // j
+      const cajSehari = cajSebulan / 30|| 0; // k
+
+      document.getElementById('result' + id).innerHTML =
+        'Nilai Emas: RM ' + nilaiEmas.toFixed(2) + '<br>' +
+        'Pembiayaan: RM <span id="loanVal' + id + '">' + pembiayaan.toFixed(2) + '</span><br>' +
+        'Kadar Upah Digunakan: ' + usedRate.toFixed(2) + '%<br>' +
+        'Caj Simpan: RM ' + cajSimpan.toFixed(2) + '<br>' +
+        'Sebulan: RM ' + cajSebulan.toFixed(2) + '<br>' +
+        'Sehari: RM ' + cajSehari.toFixed(2);
+
+      return pembiayaan;
+    }
+
+    function updateAll() {
+      const loan1 = calculate(1);
+      const loan2 = calculate(2);
+      const profit = loan2 - loan1;
+      document.getElementById('profit').innerHTML =
+        '<strong>Profit:</strong> RM ' + profit.toFixed(2);
+    }
+
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', updateAll);
+    });
+
+    window.onload = updateAll;
+  </script>
+</body>
+</html>
